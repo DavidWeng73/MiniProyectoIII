@@ -24,28 +24,28 @@ public class CharacterControler : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            playerAnim.SetTrigger("walk");
-            playerAnim.ResetTrigger("idle");
+            playerAnim.SetTrigger("Walking");
+            playerAnim.ResetTrigger("Idle");
             walking = true;
             //steps1.SetActive(true);
         }
         if (Input.GetKeyUp(KeyCode.W))
         {
-            playerAnim.ResetTrigger("walk");
-            playerAnim.SetTrigger("idle");
+            playerAnim.ResetTrigger("Walking");
+            playerAnim.SetTrigger("Idle");
             walking = false;
             //steps1.SetActive(false);
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            playerAnim.SetTrigger("walkback");
-            playerAnim.ResetTrigger("idle");
+            playerAnim.SetTrigger("BackwardRun");
+            playerAnim.ResetTrigger("Idle");
             //steps1.SetActive(true);
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
-            playerAnim.ResetTrigger("walkback");
-            playerAnim.SetTrigger("idle");
+            playerAnim.ResetTrigger("BackwardRun");
+            playerAnim.SetTrigger("Idle");
             //steps1.SetActive(false);
         }
         if (Input.GetKey(KeyCode.A))
@@ -63,16 +63,16 @@ public class CharacterControler : MonoBehaviour
                 //steps1.SetActive(false);
                 //steps2.SetActive(true);
                 w_speed = w_speed + rn_speed;
-                playerAnim.SetTrigger("run");
-                playerAnim.ResetTrigger("walk");
+                playerAnim.SetTrigger("Sprint");
+                playerAnim.ResetTrigger("Walking");
             }
             if (Input.GetKeyUp(KeyCode.LeftShift))
             {
                 //steps1.SetActive(true);
                 //steps2.SetActive(false);
                 w_speed = olw_speed;
-                playerAnim.ResetTrigger("run");
-                playerAnim.SetTrigger("walk");
+                playerAnim.ResetTrigger("Sprint");
+                playerAnim.SetTrigger("Walking");
             }
         }
     }
