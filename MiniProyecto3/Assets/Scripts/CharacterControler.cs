@@ -38,13 +38,13 @@ public class CharacterControler : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
-            playerAnim.SetTrigger("BackwardRun");
+            playerAnim.SetTrigger("RunningBackward");
             playerAnim.ResetTrigger("Idle");
             //steps1.SetActive(true);
         }
         if (Input.GetKeyUp(KeyCode.S))
         {
-            playerAnim.ResetTrigger("BackwardRun");
+            playerAnim.ResetTrigger("RunningBackward");
             playerAnim.SetTrigger("Idle");
             //steps1.SetActive(false);
         }
@@ -63,7 +63,7 @@ public class CharacterControler : MonoBehaviour
                 //steps1.SetActive(false);
                 //steps2.SetActive(true);
                 w_speed = w_speed + rn_speed;
-                playerAnim.SetTrigger("Sprint");
+                playerAnim.SetTrigger("Running");
                 playerAnim.ResetTrigger("Walking");
             }
             if (Input.GetKeyUp(KeyCode.LeftShift))
@@ -71,7 +71,7 @@ public class CharacterControler : MonoBehaviour
                 //steps1.SetActive(true);
                 //steps2.SetActive(false);
                 w_speed = olw_speed;
-                playerAnim.ResetTrigger("Sprint");
+                playerAnim.ResetTrigger("Running");
                 playerAnim.SetTrigger("Walking");
             }
         }
