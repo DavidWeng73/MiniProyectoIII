@@ -3,51 +3,48 @@ using UnityEngine;
 public class CharacterControler : MonoBehaviour
 {
     public Animator playerAnim;
-    public Rigidbody playerRigid;
-    public float w_speed, wb_speed, olw_speed, rn_speed, ro_speed;
-    public bool walking;
+    public CharacterController playerController;
     public Transform playerTrans;
+    public float w_speed, wb_speed, olw_speed, rn_speed, ro_speed;
+    public float jumpForce = 5f;
+    public float gravity = 9.8f;
+    private Vector3 moveDirection = Vector3.zero;
+    private bool walking;
 
-
-    void FixedUpdate()
+    void Update()
     {
+        float moveZ = 0f;
+
+        // Movimiento adelante/atrás
         if (Input.GetKey(KeyCode.W))
         {
-            playerRigid.linearVelocity = transform.forward * w_speed * Time.deltaTime;
+            moveZ = w_speed;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            playerRigid.linearVelocity = -transform.forward * wb_speed * Time.deltaTime;
+            moveZ = -wb_speed;
         }
-    }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.W))
+
+        Vector3 move = transform.forward * moveZ;
+
+        // Manejo del salto
+        if (playerController.isGrounded)
         {
-            playerAnim.SetTrigger("Walking");
-            playerAnim.ResetTrigger("Idle");
-            walking = true;
-            //steps1.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                moveDirection.y = jumpForce;
+                playerAnim.SetTrigger("Jump"); // Activar la animación de salto
+                Debug.Log(" Salto activado en el Animator");
+            }
         }
-        if (Input.GetKeyUp(KeyCode.W))
+        else
         {
-            playerAnim.ResetTrigger("Walking");
-            playerAnim.SetTrigger("Idle");
-            walking = false;
-            //steps1.SetActive(false);
+            moveDirection.y -= gravity * Time.deltaTime; // Aplicar gravedad
         }
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            playerAnim.SetTrigger("RunningBackward");
-            playerAnim.ResetTrigger("Idle");
-            //steps1.SetActive(true);
-        }
-        if (Input.GetKeyUp(KeyCode.S))
-        {
-            playerAnim.ResetTrigger("RunningBackward");
-            playerAnim.SetTrigger("Idle");
-            //steps1.SetActive(false);
-        }
+
+        playerController.Move((move + moveDirection) * Time.deltaTime);
+
+        // Rotación con A y D
         if (Input.GetKey(KeyCode.A))
         {
             playerTrans.Rotate(0, -ro_speed * Time.deltaTime, 0);
@@ -56,20 +53,42 @@ public class CharacterControler : MonoBehaviour
         {
             playerTrans.Rotate(0, ro_speed * Time.deltaTime, 0);
         }
-        if (walking == true)
+
+        // Animaciones de caminar
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            playerAnim.SetTrigger("Walking");
+            playerAnim.ResetTrigger("Idle");
+            walking = true;
+        }
+        if (Input.GetKeyUp(KeyCode.W))
+        {
+            playerAnim.ResetTrigger("Walking");
+            playerAnim.SetTrigger("Idle");
+            walking = false;
+        }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            playerAnim.SetTrigger("BackwardRunning");
+            playerAnim.ResetTrigger("Idle");
+        }
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            playerAnim.ResetTrigger("BackwardRunning");
+            playerAnim.SetTrigger("Idle");
+        }
+
+        // Correr
+        if (walking)
         {
             if (Input.GetKeyDown(KeyCode.LeftShift))
             {
-                //steps1.SetActive(false);
-                //steps2.SetActive(true);
-                w_speed = w_speed + rn_speed;
+                w_speed += rn_speed;
                 playerAnim.SetTrigger("Running");
                 playerAnim.ResetTrigger("Walking");
             }
             if (Input.GetKeyUp(KeyCode.LeftShift))
             {
-                //steps1.SetActive(true);
-                //steps2.SetActive(false);
                 w_speed = olw_speed;
                 playerAnim.ResetTrigger("Running");
                 playerAnim.SetTrigger("Walking");
