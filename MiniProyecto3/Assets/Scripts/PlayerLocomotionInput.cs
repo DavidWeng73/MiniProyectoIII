@@ -2,30 +2,74 @@ using FinalCharacterController;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerLocomotionInput : MonoBehaviour, PlayerControl.IPlayerLocomotionMapActions
+namespace FinalCharacterController
 {
-    public PlayerControl PlayerControl {  get; private set; }
-    public Vector2 MovementInput { get; private set; }
-
-
-    private void OnEnable()
+    [DefaultExecutionOrder(-2)]
+    public class PlayerLocomotionInput : MonoBehaviour, PlayerControl.IPlayerLocomotionMapActions
     {
-        PlayerControl = new PlayerControl();
-        PlayerControl.Enable();
+        #region Class Variables
+        [SerializeField] private bool holdToSprint = true;
+        public bool  SprintToggleOn {  get; private set; }
+        public PlayerControl PlayerControl { get; private set; }
+        public Vector2 MovementInput { get; private set; }
+        public Vector2 LookInput { get; private set; }
+        public bool JumpPressed { get; private set; }
+        #endregion
 
-        PlayerControl.PlayerLocomotionMap.Enable();
-        PlayerControl.PlayerLocomotionMap.SetCallbacks(this);
-    }
+        #region Startup
+        private void OnEnable()
+        {
+            PlayerControl = new PlayerControl();
+            PlayerControl.Enable();
 
-    private void OnDisable()
-    {
-        PlayerControl.PlayerLocomotionMap.Enable();
-        PlayerControl.PlayerLocomotionMap.SetCallbacks(this);
-    }
+            PlayerControl.PlayerLocomotionMap.Enable();
+            PlayerControl.PlayerLocomotionMap.SetCallbacks(this);
+        }
 
-    public void OnMovement(InputAction.CallbackContext context)
-    {
-        MovementInput = context.ReadValue<Vector2>();
-        print (MovementInput);
+        private void OnDisable()
+        {
+            PlayerControl.PlayerLocomotionMap.Disable();
+            PlayerControl.PlayerLocomotionMap.RemoveCallbacks(this);
+        }
+        #endregion
+
+        #region Late Update Logic
+        private void LateUpdate()
+        {
+            JumpPressed = false;
+        }
+        #endregion
+
+        #region Input Callbacks
+        public void OnMovement(InputAction.CallbackContext context)
+        {
+            MovementInput = context.ReadValue<Vector2>();
+            print(MovementInput);
+        }
+
+        public void OnLook(InputAction.CallbackContext context)
+        {
+            LookInput = context.ReadValue<Vector2>();
+        }
+
+        public void OnSprint(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                SprintToggleOn = holdToSprint || !SprintToggleOn;
+            }
+            else if (context.canceled)
+            {
+                SprintToggleOn = !holdToSprint && SprintToggleOn;
+            }
+        }
+
+        public void OnJump(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+            JumpPressed = true;
+        }
+        #endregion
     }
 }

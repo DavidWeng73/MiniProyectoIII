@@ -101,6 +101,33 @@ namespace FinalCharacterController
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""7739d05b-fc1e-40e2-a5fe-a86f718d1935"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Sprint"",
+                    ""type"": ""Button"",
+                    ""id"": ""a68cfe41-814e-4fda-8d4b-1dd9ba411942"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""17f5b315-4173-4313-ba92-ad884c3a4948"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -213,6 +240,39 @@ namespace FinalCharacterController
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""067045d6-ff41-4c7c-ba61-48ae31a62c2a"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""52e8510c-5d60-46f4-9111-5afbe0b343cd"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""58e2cd7a-8aef-4593-8772-98909e49f0e2"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -222,6 +282,9 @@ namespace FinalCharacterController
             // PlayerLocomotionMap
             m_PlayerLocomotionMap = asset.FindActionMap("PlayerLocomotionMap", throwIfNotFound: true);
             m_PlayerLocomotionMap_Movement = m_PlayerLocomotionMap.FindAction("Movement", throwIfNotFound: true);
+            m_PlayerLocomotionMap_Look = m_PlayerLocomotionMap.FindAction("Look", throwIfNotFound: true);
+            m_PlayerLocomotionMap_Sprint = m_PlayerLocomotionMap.FindAction("Sprint", throwIfNotFound: true);
+            m_PlayerLocomotionMap_Jump = m_PlayerLocomotionMap.FindAction("Jump", throwIfNotFound: true);
         }
 
         ~@PlayerControl()
@@ -303,6 +366,9 @@ namespace FinalCharacterController
         private readonly InputActionMap m_PlayerLocomotionMap;
         private List<IPlayerLocomotionMapActions> m_PlayerLocomotionMapActionsCallbackInterfaces = new List<IPlayerLocomotionMapActions>();
         private readonly InputAction m_PlayerLocomotionMap_Movement;
+        private readonly InputAction m_PlayerLocomotionMap_Look;
+        private readonly InputAction m_PlayerLocomotionMap_Sprint;
+        private readonly InputAction m_PlayerLocomotionMap_Jump;
         /// <summary>
         /// Provides access to input actions defined in input action map "PlayerLocomotionMap".
         /// </summary>
@@ -318,6 +384,18 @@ namespace FinalCharacterController
             /// Provides access to the underlying input action "PlayerLocomotionMap/Movement".
             /// </summary>
             public InputAction @Movement => m_Wrapper.m_PlayerLocomotionMap_Movement;
+            /// <summary>
+            /// Provides access to the underlying input action "PlayerLocomotionMap/Look".
+            /// </summary>
+            public InputAction @Look => m_Wrapper.m_PlayerLocomotionMap_Look;
+            /// <summary>
+            /// Provides access to the underlying input action "PlayerLocomotionMap/Sprint".
+            /// </summary>
+            public InputAction @Sprint => m_Wrapper.m_PlayerLocomotionMap_Sprint;
+            /// <summary>
+            /// Provides access to the underlying input action "PlayerLocomotionMap/Jump".
+            /// </summary>
+            public InputAction @Jump => m_Wrapper.m_PlayerLocomotionMap_Jump;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -347,6 +425,15 @@ namespace FinalCharacterController
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
+                @Sprint.started += instance.OnSprint;
+                @Sprint.performed += instance.OnSprint;
+                @Sprint.canceled += instance.OnSprint;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
 
             /// <summary>
@@ -361,6 +448,15 @@ namespace FinalCharacterController
                 @Movement.started -= instance.OnMovement;
                 @Movement.performed -= instance.OnMovement;
                 @Movement.canceled -= instance.OnMovement;
+                @Look.started -= instance.OnLook;
+                @Look.performed -= instance.OnLook;
+                @Look.canceled -= instance.OnLook;
+                @Sprint.started -= instance.OnSprint;
+                @Sprint.performed -= instance.OnSprint;
+                @Sprint.canceled -= instance.OnSprint;
+                @Jump.started -= instance.OnJump;
+                @Jump.performed -= instance.OnJump;
+                @Jump.canceled -= instance.OnJump;
             }
 
             /// <summary>
@@ -408,6 +504,27 @@ namespace FinalCharacterController
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnMovement(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnLook(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Sprint" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSprint(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnJump(InputAction.CallbackContext context);
         }
     }
 }
