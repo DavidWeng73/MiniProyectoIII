@@ -9,11 +9,14 @@ namespace FinalCharacterController
     {
         #region Class Variables
         [SerializeField] private bool holdToSprint = true;
+        [SerializeField] private bool holdToAim = true;
         public bool  SprintToggleOn {  get; private set; }
         public PlayerControl PlayerControl { get; private set; }
         public Vector2 MovementInput { get; private set; }
         public Vector2 LookInput { get; private set; }
         public bool JumpPressed { get; private set; }
+        public bool AimPressed { get; private set; }
+        public bool ShootPressed { get; private set; }
         #endregion
 
         #region Startup
@@ -69,6 +72,26 @@ namespace FinalCharacterController
             if (!context.performed)
                 return;
             JumpPressed = true;
+        }
+
+        public void OnShoot(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+            ShootPressed = true;
+        }
+
+        public void OnAim(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                AimPressed = holdToAim || !AimPressed;
+            }
+            else if (context.canceled)
+            {
+                AimPressed = !holdToAim && AimPressed;
+            }
+            Debug.Log("AimPressed: " + AimPressed);
         }
         #endregion
     }

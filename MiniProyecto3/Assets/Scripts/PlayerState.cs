@@ -16,7 +16,8 @@ namespace FinalCharacterController
             return CurrentPlayerMovementState == PlayerMovementState.Idling ||
                    CurrentPlayerMovementState == PlayerMovementState.Walking ||
                    CurrentPlayerMovementState == PlayerMovementState.Running ||
-                   CurrentPlayerMovementState == PlayerMovementState.Sprinting;
+                   CurrentPlayerMovementState == PlayerMovementState.Sprinting ||
+                   CurrentPlayerMovementState == PlayerMovementState.Aiming;
         }
     }
     public enum PlayerMovementState
@@ -28,6 +29,7 @@ namespace FinalCharacterController
         Jumping = 4,
         Falling = 5,
         Strafing = 6,
+        Aiming = 7,
     }
 }
 

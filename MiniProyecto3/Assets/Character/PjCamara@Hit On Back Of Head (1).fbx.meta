@@ -37,8 +37,8 @@ ModelImporter:
       name: Hit On Back Of Head
       takeName: mixamo.com
       internalID: -203655887218126122
-      firstFrame: 0
-      lastFrame: 110
+      firstFrame: 55
+      lastFrame: 67
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
