@@ -40,6 +40,7 @@ namespace FinalCharacterController
         private void LateUpdate()
         {
             JumpPressed = false;
+            ShootPressed = false;
         }
         #endregion
 

@@ -9,6 +9,7 @@ namespace FinalCharacterController
     {
         [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
         [SerializeField] private GameObject shootProjectile;
+        [SerializeField] private GameObject cameraFlash;
         private PlayerLocomotionInput _playerLocomotionInput;
         private PlayerState _playerState;
         private Animator animator;
@@ -44,19 +45,16 @@ namespace FinalCharacterController
             if (_playerLocomotionInput.ShootPressed)
             {
                 shootProjectile.gameObject.SetActive(true);
+                cameraFlash.gameObject.SetActive(true);
                 StartCoroutine(DisableShootProjectile());
             }
-
-            else 
-            {
-                shootProjectile.gameObject.SetActive(false);
-            }
-
         }
 
         private IEnumerator DisableShootProjectile()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.3f);
+            shootProjectile.gameObject.SetActive(false);
+            cameraFlash.gameObject.SetActive(false) ;
         }
     }
 }
