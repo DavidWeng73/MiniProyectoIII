@@ -10,6 +10,8 @@ namespace FinalCharacterController
         [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
         [SerializeField] private GameObject shootProjectile;
         [SerializeField] private GameObject cameraFlash;
+        [SerializeField] private GameObject shootUltimate;
+        [SerializeField] private GameObject cameraUltFlash;
         private PlayerLocomotionInput _playerLocomotionInput;
         private PlayerState _playerState;
         private Animator animator;

@@ -42,7 +42,6 @@ public class Enemy : MonoBehaviour
             navAgent.isStopped = true;
         }
 
-        // Pausar la IA
         if (enemyAI != null)
         {
             enemyAI.enabled = false;
