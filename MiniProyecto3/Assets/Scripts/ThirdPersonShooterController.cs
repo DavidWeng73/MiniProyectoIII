@@ -10,8 +10,10 @@ namespace FinalCharacterController
         [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
         [SerializeField] private GameObject shootProjectile;
         [SerializeField] private GameObject cameraFlash;
+        [SerializeField] private GameObject ultimateCamera;
         [SerializeField] private GameObject shootUltimate;
         [SerializeField] private GameObject cameraUltFlash;
+        public int ammo = 3;
         private PlayerLocomotionInput _playerLocomotionInput;
         private PlayerState _playerState;
         private Animator animator;
@@ -26,6 +28,7 @@ namespace FinalCharacterController
         {
             AimCameraRotation();
             CharacterShoot();
+            CharacterUltimate();
         }
 
         private void AimCameraRotation()
@@ -44,11 +47,24 @@ namespace FinalCharacterController
 
         private void CharacterShoot()
         {
-            if (_playerLocomotionInput.ShootPressed)
+            if (_playerLocomotionInput.ShootPressed && ammo > 0)
             {
                 shootProjectile.gameObject.SetActive(true);
                 cameraFlash.gameObject.SetActive(true);
                 StartCoroutine(DisableShootProjectile());
+                ammo--;
+            }
+        }
+
+        private void CharacterUltimate()
+        {
+            if (_playerLocomotionInput.UltPressed && ammo == 3)
+            {
+                ultimateCamera.gameObject.SetActive(true);
+                shootUltimate.gameObject.SetActive(true);
+                cameraUltFlash.gameObject.SetActive(true);
+                StartCoroutine(DisableUltimate());
+                ammo = 0;
             }
         }
 
@@ -57,6 +73,25 @@ namespace FinalCharacterController
             yield return new WaitForSeconds(0.3f);
             shootProjectile.gameObject.SetActive(false);
             cameraFlash.gameObject.SetActive(false) ;
+        }
+
+        private IEnumerator DisableUltimate()
+        {
+            yield return new WaitForSeconds(0.5f);
+            ultimateCamera.gameObject.SetActive(false);
+            shootUltimate.gameObject.SetActive(false);
+            cameraUltFlash.gameObject.SetActive(false);
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Ammo"))
+            {
+                if (ammo < 3)
+                {
+                    ammo = 3;
+                }
+            }
         }
     }
 }

@@ -146,6 +146,15 @@ namespace FinalCharacterController
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ultimate"",
+                    ""type"": ""Button"",
+                    ""id"": ""ac95c243-64a3-4873-b163-a6bff0fd6322"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -313,6 +322,17 @@ namespace FinalCharacterController
                     ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2867578b-e6ba-4327-80ab-5e1b98410f1f"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ultimate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -327,6 +347,7 @@ namespace FinalCharacterController
             m_PlayerLocomotionMap_Jump = m_PlayerLocomotionMap.FindAction("Jump", throwIfNotFound: true);
             m_PlayerLocomotionMap_Aim = m_PlayerLocomotionMap.FindAction("Aim", throwIfNotFound: true);
             m_PlayerLocomotionMap_Shoot = m_PlayerLocomotionMap.FindAction("Shoot", throwIfNotFound: true);
+            m_PlayerLocomotionMap_Ultimate = m_PlayerLocomotionMap.FindAction("Ultimate", throwIfNotFound: true);
         }
 
         ~@PlayerControl()
@@ -413,6 +434,7 @@ namespace FinalCharacterController
         private readonly InputAction m_PlayerLocomotionMap_Jump;
         private readonly InputAction m_PlayerLocomotionMap_Aim;
         private readonly InputAction m_PlayerLocomotionMap_Shoot;
+        private readonly InputAction m_PlayerLocomotionMap_Ultimate;
         /// <summary>
         /// Provides access to input actions defined in input action map "PlayerLocomotionMap".
         /// </summary>
@@ -448,6 +470,10 @@ namespace FinalCharacterController
             /// Provides access to the underlying input action "PlayerLocomotionMap/Shoot".
             /// </summary>
             public InputAction @Shoot => m_Wrapper.m_PlayerLocomotionMap_Shoot;
+            /// <summary>
+            /// Provides access to the underlying input action "PlayerLocomotionMap/Ultimate".
+            /// </summary>
+            public InputAction @Ultimate => m_Wrapper.m_PlayerLocomotionMap_Ultimate;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -492,6 +518,9 @@ namespace FinalCharacterController
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
+                @Ultimate.started += instance.OnUltimate;
+                @Ultimate.performed += instance.OnUltimate;
+                @Ultimate.canceled += instance.OnUltimate;
             }
 
             /// <summary>
@@ -521,6 +550,9 @@ namespace FinalCharacterController
                 @Shoot.started -= instance.OnShoot;
                 @Shoot.performed -= instance.OnShoot;
                 @Shoot.canceled -= instance.OnShoot;
+                @Ultimate.started -= instance.OnUltimate;
+                @Ultimate.performed -= instance.OnUltimate;
+                @Ultimate.canceled -= instance.OnUltimate;
             }
 
             /// <summary>
@@ -603,6 +635,13 @@ namespace FinalCharacterController
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnShoot(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Ultimate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnUltimate(InputAction.CallbackContext context);
         }
     }
 }

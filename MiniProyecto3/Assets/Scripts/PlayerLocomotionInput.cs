@@ -17,6 +17,7 @@ namespace FinalCharacterController
         public bool JumpPressed { get; private set; }
         public bool AimPressed { get; private set; }
         public bool ShootPressed { get; private set; }
+        public bool UltPressed { get; private set; }
         #endregion
 
         #region Startup
@@ -41,6 +42,7 @@ namespace FinalCharacterController
         {
             JumpPressed = false;
             ShootPressed = false;
+            UltPressed = false;
         }
         #endregion
 
@@ -80,6 +82,13 @@ namespace FinalCharacterController
             if (!context.performed)
                 return;
             ShootPressed = true;
+        }
+
+        public void OnUltimate(InputAction.CallbackContext context)
+        {
+            if (!context.performed)
+                return;
+            UltPressed = true;
         }
 
         public void OnAim(InputAction.CallbackContext context)
