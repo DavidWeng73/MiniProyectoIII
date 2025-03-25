@@ -13,5 +13,14 @@ public class Projectile : MonoBehaviour
                 enemy.TakeDamage(damage);
             }
         }
+
+        if (other.CompareTag("Paints"))
+        {
+            Paint paint = other.GetComponent<Paint>();
+            if (paint != null)
+            {
+                paint.DestroyPaint();
+            }
+        }
     }
 }

@@ -14,6 +14,8 @@ namespace FinalCharacterController
         [SerializeField] private GameObject shootUltimate;
         [SerializeField] private GameObject cameraUltFlash;
         public int ammo = 3;
+        public GameObject battery;
+        public GameObject Bigbattery;
         private PlayerLocomotionInput _playerLocomotionInput;
         private PlayerState _playerState;
         private Animator animator;
@@ -89,9 +91,20 @@ namespace FinalCharacterController
             {
                 if (ammo < 3)
                 {
+                    ammo++;
+                    battery.gameObject.SetActive(false);
+                }
+            }
+
+            if (other.CompareTag("BigAmmo"))
+            {
+                if (ammo < 3)
+                {
                     ammo = 3;
+                    Bigbattery.gameObject.SetActive(false);
                 }
             }
         }
+
     }
 }
