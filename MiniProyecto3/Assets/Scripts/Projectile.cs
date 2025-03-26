@@ -5,7 +5,7 @@ public class Projectile : MonoBehaviour
     public int damage = 1;
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))  
+        if (other.CompareTag("Enemy"))
         {
             Enemy enemy = other.GetComponent<Enemy>();
             if (enemy != null)
@@ -21,6 +21,16 @@ public class Projectile : MonoBehaviour
             {
                 paint.DestroyPaint();
             }
+        }
+
+        if (other.CompareTag("FakePaints"))
+        {
+            Paint fakepaint = other.GetComponent<Paint>();
+            if (fakepaint != null)
+            {
+                fakepaint.DestroyPaint();
+            }
+
         }
     }
 }

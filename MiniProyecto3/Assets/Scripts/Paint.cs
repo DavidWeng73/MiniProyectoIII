@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Paint : MonoBehaviour
 {
-    private Rigidbody rb;
     public static int numPaints = 0;
     public GameObject puerta;
 
@@ -22,5 +21,17 @@ public class Paint : MonoBehaviour
         }
 
         Destroy(gameObject);
+    }
+
+    public void FakePaintTrap()
+    {
+        StartCoroutine(FakePaintTrapCoroutine());
+    }
+
+    private IEnumerator FakePaintTrapCoroutine()
+    {
+        GetComponent<CharacterController>().enabled = false;
+        yield return new WaitForSeconds(1.5f);
+        GetComponent<CharacterController>().enabled = true;
     }
 }

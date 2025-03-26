@@ -29,10 +29,10 @@ public class Enemy : MonoBehaviour
 
             StartCoroutine(UltEnemy());
 
-            if (health <= 0)
-            {
-                Die();
-            }
+            //if (health <= 0)
+            //{
+            //    Die();
+            //}
         }
     }
 
@@ -45,10 +45,10 @@ public class Enemy : MonoBehaviour
 
             StartCoroutine(FreezeEnemy());
 
-            if (health <= 0)
-            {
-                Die();
-            }
+            //if (health <= 0)
+            //{
+            //    Die();
+            //}
         }
     }
 
