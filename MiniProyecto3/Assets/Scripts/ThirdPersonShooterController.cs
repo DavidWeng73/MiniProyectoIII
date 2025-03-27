@@ -2,6 +2,7 @@ using UnityEngine;
 using Cinemachine;
 using static FinalCharacterController.PlayerState;
 using System.Collections;
+using UnityEngine.UI;
 
 namespace FinalCharacterController
 {
@@ -19,6 +20,7 @@ namespace FinalCharacterController
         private PlayerLocomotionInput _playerLocomotionInput;
         private PlayerState _playerState;
         private Animator animator;
+        public Image[] batteryIcons;
 
         private void Awake()
         {
@@ -31,6 +33,14 @@ namespace FinalCharacterController
             AimCameraRotation();
             CharacterShoot();
             CharacterUltimate();
+        }
+
+        private void UpdateBatteryUI()
+        {
+            for (int i = 0; i < batteryIcons.Length; i++)
+            {
+                batteryIcons[i].enabled = i < ammo;
+            }
         }
 
         private void AimCameraRotation()
@@ -55,6 +65,7 @@ namespace FinalCharacterController
                 cameraFlash.gameObject.SetActive(true);
                 StartCoroutine(DisableShootProjectile());
                 ammo--;
+                UpdateBatteryUI();
             }
         }
 
@@ -67,6 +78,7 @@ namespace FinalCharacterController
                 cameraUltFlash.gameObject.SetActive(true);
                 StartCoroutine(DisableUltimate());
                 ammo = 0;
+                UpdateBatteryUI();
             }
         }
 
@@ -92,6 +104,7 @@ namespace FinalCharacterController
                 if (ammo < 3)
                 {
                     ammo++;
+                    UpdateBatteryUI();
                     battery.gameObject.SetActive(false);
                 }
             }
@@ -101,6 +114,7 @@ namespace FinalCharacterController
                 if (ammo < 3)
                 {
                     ammo = 3;
+                    UpdateBatteryUI();
                     Bigbattery.gameObject.SetActive(false);
                 }
             }
