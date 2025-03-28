@@ -8,7 +8,7 @@ namespace FinalCharacterController
     {
         #region Class Variables
         [Header("Components")]
-        [SerializeField] private CharacterController _characterController;
+        [SerializeField] public CharacterController _characterController;
         [SerializeField] private Camera _playerCamera;
         public float RotationMismatch { get; private set; } = 0f;
         public bool IsRotatingToTarget { get; private set; } = false;

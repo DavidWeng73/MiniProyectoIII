@@ -5,6 +5,7 @@ public class Paint : MonoBehaviour
 {
     public static int numPaints = 0;
     public GameObject puerta;
+    public GameObject player;
 
     private void Start()
     {
@@ -30,8 +31,12 @@ public class Paint : MonoBehaviour
 
     private IEnumerator FakePaintTrapCoroutine()
     {
-        GetComponent<CharacterController>().enabled = false;
-        yield return new WaitForSeconds(1.5f);
-        GetComponent<CharacterController>().enabled = true;
+        CharacterController controller = player.GetComponent<CharacterController>();
+        if (controller != null)
+        {
+            controller.enabled = false;
+            yield return new WaitForSeconds(5f);
+            controller.enabled = true;
+        }
     }
 }

@@ -28,7 +28,7 @@ public class Projectile : MonoBehaviour
             Paint fakepaint = other.GetComponent<Paint>();
             if (fakepaint != null)
             {
-                fakepaint.DestroyPaint();
+                fakepaint.FakePaintTrap();
             }
 
         }

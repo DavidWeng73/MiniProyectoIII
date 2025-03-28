@@ -2564,6 +2564,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puerta: {fileID: 176304386}
+  player: {fileID: 0}
 --- !u!1001 &524905265
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3404,6 +3405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puerta: {fileID: 176304386}
+  player: {fileID: 0}
 --- !u!1001 &673861305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3500,6 +3502,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puerta: {fileID: 176304386}
+  player: {fileID: 0}
 --- !u!4 &711042204 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 278546379628025451, guid: 25c12ab16ba5d404192d32c7ff026a1f, type: 3}

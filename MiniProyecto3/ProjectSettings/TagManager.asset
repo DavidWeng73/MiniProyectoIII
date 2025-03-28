@@ -9,6 +9,7 @@ TagManager:
   - Ammo
   - BigAmmo
   - Paints
+  - FakePaints
   layers:
   - Default
   - TransparentFX
