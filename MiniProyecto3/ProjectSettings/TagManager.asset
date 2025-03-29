@@ -10,6 +10,7 @@ TagManager:
   - BigAmmo
   - Paints
   - FakePaints
+  - NoColisionDoors
   layers:
   - Default
   - TransparentFX
