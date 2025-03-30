@@ -246,7 +246,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 33.65
+  m_fontSize: 69
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3600,7 +3600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a124fc68c2611474da7152cc1f4e2c9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextLevel: FinishScene
+  nextLevel: FinalScene
 --- !u!1001 &299370056
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7941,7 +7941,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 33.7
+  m_fontSize: 67.05
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8698,7 +8698,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 49.85
+  m_fontSize: 72
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -11106,7 +11106,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 33.65
+  m_fontSize: 69
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -18274,6 +18274,7 @@ GameObject:
   - component: {fileID: 1316146307}
   - component: {fileID: 1316146306}
   - component: {fileID: 1316146305}
+  - component: {fileID: 1316146310}
   m_Layer: 5
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -18379,6 +18380,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1316146310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316146304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77cab214d3fcca9468fe86c139f97468, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1316706251 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 348317726534936664, guid: 29b641f3274cf4748a665a543dc07dfc, type: 3}
@@ -22769,7 +22782,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.7775, y: 0.036827873}
   m_AnchorMax: {x: 0.97625005, y: 0.104}
-  m_AnchoredPosition: {x: -213.1, y: 23}
+  m_AnchoredPosition: {x: -425, y: 23}
   m_SizeDelta: {x: 1, y: -1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1652035746
@@ -30124,6 +30137,10 @@ PrefabInstance:
     - target: {fileID: 6706742122852165414, guid: 1e4fd927539a4084593cc2e54a81695f, type: 3}
       propertyPath: Damping.x
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6766800496809081244, guid: 1e4fd927539a4084593cc2e54a81695f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6949982624177063764, guid: 1e4fd927539a4084593cc2e54a81695f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
