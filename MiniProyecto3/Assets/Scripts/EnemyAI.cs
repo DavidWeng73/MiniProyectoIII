@@ -102,4 +102,15 @@ public class EnemyAI : MonoBehaviour
         yield return new WaitForSeconds(jumpscareTime);
         SceneManager.LoadScene(deathScene);
     }
+
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip jumpscareClip;
+
+    public void PlayJumpscareSound()
+    {
+        if (audioSource && jumpscareClip)
+        {
+            audioSource.PlayOneShot(jumpscareClip);
+        }
+    }
 }

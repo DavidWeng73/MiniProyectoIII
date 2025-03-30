@@ -21,7 +21,9 @@ namespace FinalCharacterController
         private PlayerState _playerState;
         private Animator animator;
         public Image[] batteryIcons;
-
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private AudioClip shootClip;
+        [SerializeField] private AudioClip ultimateClip;
         private void Awake()
         {
             _playerLocomotionInput = GetComponent<PlayerLocomotionInput>();
@@ -30,6 +32,7 @@ namespace FinalCharacterController
         }
         private void Update()
         {
+            if (PauseMenu.isPaused) return;
             AimCameraRotation();
             CharacterShoot();
             CharacterUltimate();
@@ -63,6 +66,7 @@ namespace FinalCharacterController
             {
                 shootProjectile.gameObject.SetActive(true);
                 cameraFlash.gameObject.SetActive(true);
+                audioSource.PlayOneShot(shootClip);
                 StartCoroutine(DisableShootProjectile());
                 ammo--;
                 UpdateBatteryUI();
@@ -76,6 +80,7 @@ namespace FinalCharacterController
                 ultimateCamera.gameObject.SetActive(true);
                 shootUltimate.gameObject.SetActive(true);
                 cameraUltFlash.gameObject.SetActive(true);
+                audioSource.PlayOneShot(ultimateClip);
                 StartCoroutine(DisableUltimate());
                 ammo = 0;
                 UpdateBatteryUI();
