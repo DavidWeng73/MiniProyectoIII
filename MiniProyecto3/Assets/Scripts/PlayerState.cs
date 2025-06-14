@@ -1,8 +1,9 @@
 using UnityEngine;
+using Unity.Netcode;
 
 namespace FinalCharacterController
 {
-    public class PlayerState : MonoBehaviour
+    public class PlayerState : NetworkBehaviour
     {
         [field: SerializeField] public PlayerMovementState CurrentPlayerMovementState { get; private set; } = PlayerMovementState.Idling;
 

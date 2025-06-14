@@ -1,8 +1,9 @@
 using UnityEngine;
+using Unity.Netcode;
 
 namespace FinalCharacterController
 {
-    public class PlayerAnimation : MonoBehaviour
+    public class PlayerAnimation : NetworkBehaviour
     {
         [SerializeField] private Animator _animator;
         [SerializeField] private float locomotionBlendSpeed = 4f;

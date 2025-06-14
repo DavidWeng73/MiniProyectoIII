@@ -1,11 +1,12 @@
 using FinalCharacterController;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
 namespace FinalCharacterController
 {
     [DefaultExecutionOrder(-2)]
-    public class PlayerLocomotionInput : MonoBehaviour, PlayerControl.IPlayerLocomotionMapActions
+    public class PlayerLocomotionInput : NetworkBehaviour, PlayerControl.IPlayerLocomotionMapActions
     {
         #region Class Variables
         [SerializeField] private bool holdToSprint = true;

@@ -3,10 +3,11 @@ using Cinemachine;
 using static FinalCharacterController.PlayerState;
 using System.Collections;
 using UnityEngine.UI;
+using Unity.Netcode;
 
 namespace FinalCharacterController
 {
-    public class ThirdPersonShooterController : MonoBehaviour
+    public class ThirdPersonShooterController : NetworkBehaviour
     {
         [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
         [SerializeField] private GameObject shootProjectile;
@@ -24,19 +25,32 @@ namespace FinalCharacterController
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private AudioClip shootClip;
         [SerializeField] private AudioClip ultimateClip;
+        private PlayerController playerController;
         private void Awake()
         {
             _playerLocomotionInput = GetComponent<PlayerLocomotionInput>();
             _playerState = GetComponent<PlayerState>();
             animator = GetComponent<Animator>();
+            playerController = GetComponent<PlayerController>();
         }
         private void Update()
         {
+            if (!IsOwner) return;
             if (PauseMenu.isPaused) return;
             AimCameraRotation();
             CharacterShoot();
             CharacterUltimate();
         }
+
+        private void Start()
+        {
+            if (IsOwner && playerController != null)
+            {
+                aimVirtualCamera.Follow = playerController.GetCameraTransform();
+                aimVirtualCamera.LookAt = playerController.GetCameraTransform();
+            }
+        }
+
 
         private void UpdateBatteryUI()
         {

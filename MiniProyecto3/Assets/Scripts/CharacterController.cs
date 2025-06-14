@@ -1,10 +1,12 @@
 using UnityEngine;
 using static FinalCharacterController.PlayerState;
+using System;
+using Unity.Netcode;
 
 namespace FinalCharacterController
 {
     [DefaultExecutionOrder(-1)]
-    public class PlayerController: MonoBehaviour
+    public class PlayerController: NetworkBehaviour
     {
         #region Class Variables
         [Header("Components")]
@@ -54,16 +56,31 @@ namespace FinalCharacterController
         #region Update Logic
         private void Update()
         {
+            if (!IsOwner) return;
             UpdateMovementState();
             HandleVerticalMovement();
             HandleLateralMovement();
         }
 
+        public override void OnNetworkSpawn()
+        {
+            if (!IsOwner)
+            {
+                _playerCamera.gameObject.SetActive(false);
+            }
+
+        }
+
+        public Transform GetCameraTransform()
+        {
+            return _playerCamera != null ? _playerCamera.transform : null;
+        }
+
         private void UpdateMovementState()
         {
-            bool isMovementInput = _playerLocomotionInput.MovementInput != Vector2.zero;    //order
-            bool isMovingLaterally = IsMovingLaterally();                                   //matter
-            bool isSprinting = _playerLocomotionInput.SprintToggleOn && isMovingLaterally; //order matters
+            bool isMovementInput = _playerLocomotionInput.MovementInput != Vector2.zero;    
+            bool isMovingLaterally = IsMovingLaterally();                                   
+            bool isSprinting = _playerLocomotionInput.SprintToggleOn && isMovingLaterally; 
             bool isGrounded = IsGrounded();
 
             PlayerMovementState lateralState = isSprinting ? PlayerMovementState.Sprinting :
@@ -71,7 +88,6 @@ namespace FinalCharacterController
 
             _playerState.SetPlayerMovementState(lateralState);
 
-            // Control Airborn State
             if (!isGrounded && _characterController.velocity.y > 0f)
             {
                 _playerState.SetPlayerMovementState(PlayerMovementState.Jumping);
@@ -99,11 +115,9 @@ namespace FinalCharacterController
 
         private void HandleLateralMovement()
         {
-            // Create quick references for current state
             bool isSprinting = _playerState.CurrentPlayerMovementState == PlayerMovementState.Sprinting;
             bool isGrounded = _playerState.InGroundedState();
 
-            // State dependent acceleration and speed
             float lateralAcceleration = isSprinting ? sprintAccelerataion : runAcceleration;
             float clampLateralMagnitude = isSprinting ? sprintSpeed : runSpeed;
 
@@ -114,13 +128,11 @@ namespace FinalCharacterController
             Vector3 movementDelta = movementDirection * lateralAcceleration * Time.deltaTime;
             Vector3 newVelocity = _characterController.velocity + movementDelta;
 
-            // Add drag to player
             Vector3 currentDrag = newVelocity.normalized * drag * Time.deltaTime;
             newVelocity = (newVelocity.magnitude > drag * Time.deltaTime) ? newVelocity - currentDrag : Vector3.zero;
             newVelocity = Vector3.ClampMagnitude(newVelocity, clampLateralMagnitude);
             newVelocity.y += _verticalVelocity;
 
-            // Move character (Unity suggests only calling this once per tick)
             _characterController.Move(newVelocity * Time.deltaTime);
         }
         #endregion
@@ -142,12 +154,10 @@ namespace FinalCharacterController
             bool isIdling = _playerState.CurrentPlayerMovementState == PlayerMovementState.Idling;
             IsRotatingToTarget = _rotatingToTargetTimer > 0;
 
-            // ROTATE if we're not idling
             if (!isIdling)
             {
                 RotatePlayerToTarget();
             }
-            // If rotation mismatch not within tolerance, or rotate to target is active, ROTATE
             else if (Mathf.Abs(RotationMismatch) > rotationTolerance || IsRotatingToTarget)
             {
                 UpdateIdleRotation(rotationTolerance);
@@ -155,7 +165,6 @@ namespace FinalCharacterController
 
             _playerCamera.transform.rotation = Quaternion.Euler(_cameraRotation.y, _cameraRotation.x, 0f);
 
-            // Get angle between camera and player
             Vector3 camForwardProjectedXZ = new Vector3(_playerCamera.transform.forward.x, 0f, _playerCamera.transform.forward.z).normalized;
             Vector3 crossProduct = Vector3.Cross(transform.forward, camForwardProjectedXZ);
             float sign = Mathf.Sign(Vector3.Dot(crossProduct, transform.up));
@@ -163,7 +172,6 @@ namespace FinalCharacterController
         }
         private void UpdateIdleRotation(float rotationTolerance)
         {
-            // Initiate new rotation direction
             if (Mathf.Abs(RotationMismatch) > rotationTolerance)
             {
                 _rotatingToTargetTimer = rotateToTargetTime;
@@ -171,7 +179,6 @@ namespace FinalCharacterController
             }
             _rotatingToTargetTimer -= Time.deltaTime;
 
-            // Rotate player
             if (_isRotatingClockwise && RotationMismatch > 0f ||
                 !_isRotatingClockwise && RotationMismatch < 0f)
             {
