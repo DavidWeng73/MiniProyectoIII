@@ -1,23 +1,27 @@
+using FinalCharacterController;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : NetworkBehaviour
 {
     public NavMeshAgent ai;
     public List<Transform> destinations;
     public Animator aiAnim;
     public float walkSpeed, chaseSpeed, minIdleTime, maxIdleTime, idleTime, sightDistance, catchDistance, chaseTime, minChaseTime, maxChaseTime, jumpscareTime;
     public bool walking, chasing;
-    public Transform player;
+    //public Transform player;
     Transform currentDest;
     Vector3 dest;
     int randNum;
     public int destinationAmount;
     public Vector3 rayCastOffset;
     public string deathScene;
+    public NetworkVariable<bool> isChasing = new NetworkVariable<bool>();
+    public NetworkVariable<Vector3> networkedDestination = new NetworkVariable<Vector3>();
 
     void Start()
     {
@@ -27,36 +31,68 @@ public class EnemyAI : MonoBehaviour
     }
     void Update()
     {
-        Vector3 direction = (player.position - transform.position).normalized;
+        if (!IsServer) return;
+        Transform targetPlayer = GetClosestPlayer();
+        if (targetPlayer == null) return;
+        Vector3 direction = (targetPlayer.position - transform.position).normalized;
         RaycastHit hit;
         if (Physics.Raycast(transform.position + rayCastOffset, direction, out hit, sightDistance))
         {
-            if (hit.collider.gameObject.tag == "Player")
+            if (hit.collider.CompareTag ("Player"))
             {
                 walking = false;
                 StopCoroutine("stayIdle");
                 StopCoroutine("chaseRoutine");
                 StartCoroutine("chaseRoutine");
+                isChasing.Value = true;
+                networkedDestination.Value = targetPlayer.position;
                 chasing = true;
+                SetAnimationClientRpc("sprint");
             }
         }
         if (chasing == true)
         {
-            dest = player.position;
+            dest = targetPlayer.position;
             ai.destination = dest;
+            networkedDestination.Value = dest;
             ai.speed = chaseSpeed;
             aiAnim.ResetTrigger("walk");
             aiAnim.ResetTrigger("idle");
             aiAnim.SetTrigger("sprint");
-            float distance = Vector3.Distance(player.position, ai.transform.position);
+            float distance = Vector3.Distance(targetPlayer.position, ai.transform.position);
             if (distance <= catchDistance)
             {
-                player.gameObject.SetActive(false);
                 aiAnim.ResetTrigger("walk");
                 aiAnim.ResetTrigger("idle");
                 aiAnim.ResetTrigger("sprint");
-                aiAnim.SetTrigger("jumpscare");
-                StartCoroutine(deathRoutine());
+                //aiAnim.SetTrigger("jumpscare");
+
+                var networkObject = targetPlayer.GetComponent<NetworkObject>();
+                var playerController = targetPlayer.GetComponent<PlayerController>();
+
+                if (networkObject != null)
+                {
+                    var clientId = networkObject.OwnerClientId;
+
+                    ClientRpcParams clientRpcParams = new ClientRpcParams
+                    {
+                        Send = new ClientRpcSendParams
+                        {
+                            TargetClientIds = new ulong[] { clientId } 
+                        }
+                    };
+
+                    SetAnimationClientRpc("jumpscare", clientRpcParams);
+
+                    if (playerController != null)
+                    {
+                        playerController.ActivateJumpscareClientRpc();
+                    }
+
+                    DisablePlayerClientRpc(clientId);
+                    StartCoroutine(JumpscareAndRespawn(targetPlayer, clientId));
+                }
+
                 chasing = false;
             }
         }
@@ -97,11 +133,10 @@ public class EnemyAI : MonoBehaviour
         randNum = Random.Range(0, destinations.Count);
         currentDest = destinations[randNum];
     }
-    IEnumerator deathRoutine()
-    {
-        yield return new WaitForSeconds(jumpscareTime);
-        SceneManager.LoadScene(deathScene);
-    }
+    //IEnumerator deathRoutine()
+    //{
+    //    yield return new WaitForSeconds(jumpscareTime);
+    //}
 
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip jumpscareClip;
@@ -111,6 +146,93 @@ public class EnemyAI : MonoBehaviour
         if (audioSource && jumpscareClip)
         {
             audioSource.PlayOneShot(jumpscareClip);
+        }
+    }
+
+    IEnumerator JumpscareAndRespawn(Transform player, ulong clientId)
+    {
+        yield return new WaitForSeconds(jumpscareTime);
+
+        var respawn = player.GetComponent<PlayerRespawn>();
+        if (respawn != null)
+        {
+            respawn.RespawnServerRpc(clientId);
+            respawn.OnRespawnClientRpc(clientId); 
+        }
+
+        StartCoroutine(TemporarilyIgnorePlayer(player.gameObject));
+
+        aiAnim.ResetTrigger("jumpscare");
+        aiAnim.ResetTrigger("sprint");
+        aiAnim.ResetTrigger("idle");
+        aiAnim.ResetTrigger("walk");
+        SetAnimationClientRpc("idle");
+
+        walking = true;
+        chasing = false;
+        randNum = Random.Range(0, destinations.Count);
+        currentDest = destinations[randNum];
+    }
+
+    private HashSet<GameObject> temporarilyIgnored = new HashSet<GameObject>();
+
+    IEnumerator TemporarilyIgnorePlayer(GameObject player)
+    {
+        temporarilyIgnored.Add(player);
+        yield return new WaitForSeconds(3f); 
+        temporarilyIgnored.Remove(player);
+    }
+
+    [ClientRpc]
+    void SetAnimationClientRpc(string animation, ClientRpcParams clientRpcParams = default)
+    {
+        aiAnim.ResetTrigger("walk");
+        aiAnim.ResetTrigger("idle");
+        aiAnim.ResetTrigger("sprint");
+        aiAnim.ResetTrigger("jumpscare");
+        aiAnim.SetTrigger(animation);
+    }
+
+    private Transform GetClosestPlayer()
+    {
+        float closestDistance = Mathf.Infinity;
+        Transform closestPlayer = null;
+
+        foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            var playerObject = client.PlayerObject;
+            if (playerObject != null && !temporarilyIgnored.Contains(playerObject.gameObject))
+            {
+                float distance = Vector3.Distance(transform.position, playerObject.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestPlayer = playerObject.transform;
+                }
+            }
+        }
+        return closestPlayer;
+    }
+
+    //[ClientRpc]
+    //void PlayerCaughtClientRpc()
+    //{
+    //    if (IsOwner)
+    //    {
+    //        gameObject.SetActive(false); 
+    //    }
+    //}
+    
+    [ClientRpc]
+    void DisablePlayerClientRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            var playerController = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
+            var camera = playerController.GetCameraTransform()?.gameObject;
+
+            if (camera != null) camera.SetActive(false);
+            playerController.SetDead(true) ;
         }
     }
 }

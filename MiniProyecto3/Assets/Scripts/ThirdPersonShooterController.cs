@@ -15,6 +15,7 @@ namespace FinalCharacterController
         [SerializeField] private GameObject ultimateCamera;
         [SerializeField] private GameObject shootUltimate;
         [SerializeField] private GameObject cameraUltFlash;
+        [SerializeField] private GameObject batteryUIRoot;
         public int ammo = 3;
         public GameObject battery;
         public GameObject Bigbattery;
@@ -57,6 +58,14 @@ namespace FinalCharacterController
             for (int i = 0; i < batteryIcons.Length; i++)
             {
                 batteryIcons[i].enabled = i < ammo;
+            }
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (!IsOwner && batteryUIRoot != null)
+            {
+                batteryUIRoot.SetActive(false); 
             }
         }
 

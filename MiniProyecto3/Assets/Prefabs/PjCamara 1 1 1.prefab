@@ -415,6 +415,7 @@ GameObject:
   - component: {fileID: 7722745294868278636}
   - component: {fileID: 5350210214242772160}
   - component: {fileID: 5991501942058129984}
+  - component: {fileID: -2411257020226798155}
   m_Layer: 0
   m_Name: PjCamara 1 1 1
   m_TagString: Player
@@ -524,6 +525,10 @@ MonoBehaviour:
   lookSenseH: 0.1
   lookSenseV: 0.1
   lookLimitV: 50
+  groundCheckDistance: 0.1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!114 &6443291231736439625
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -609,6 +614,7 @@ MonoBehaviour:
   ultimateCamera: {fileID: 253111163263682517}
   shootUltimate: {fileID: 4672070859783123815}
   cameraUltFlash: {fileID: 8539176281324847130}
+  batteryUIRoot: {fileID: 1470666712161716954}
   ammo: 3
   battery: {fileID: 0}
   Bigbattery: {fileID: 0}
@@ -814,6 +820,20 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &-2411257020226798155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2325463401114731328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf329a595e99cd64ea7e57500cf345f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  spawnPosition: {x: 0, y: 0, z: -1}
 --- !u!1 &2432153826500803206
 GameObject:
   m_ObjectHideFlags: 0

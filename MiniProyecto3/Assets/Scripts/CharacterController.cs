@@ -2,6 +2,7 @@ using UnityEngine;
 using static FinalCharacterController.PlayerState;
 using System;
 using Unity.Netcode;
+using System.Collections;
 
 namespace FinalCharacterController
 {
@@ -34,6 +35,10 @@ namespace FinalCharacterController
         public float lookSenseV = 0.1f;
         public float lookLimitV = 89f;
 
+        [Header("Jumpscare Settings (Player Specific)")]
+        [SerializeField] private AudioClip _playerJumpscareSoundClip; 
+        [SerializeField] private AudioSource _playerAudioSource; 
+
         private PlayerLocomotionInput _playerLocomotionInput;
         private PlayerState _playerState;
 
@@ -43,6 +48,14 @@ namespace FinalCharacterController
         private bool _isRotatingClockwise = false;
         private float _rotatingToTargetTimer = 0f;
         private float _verticalVelocity = 0f;
+
+        private bool isDead = false; 
+
+        public void SetDead(bool dead)
+        {
+            isDead = dead;
+        }
+
         #endregion
 
         #region Startup
@@ -56,7 +69,7 @@ namespace FinalCharacterController
         #region Update Logic
         private void Update()
         {
-            if (!IsOwner) return;
+            if (!IsOwner || isDead) return;
             UpdateMovementState();
             HandleVerticalMovement();
             HandleLateralMovement();
@@ -88,14 +101,14 @@ namespace FinalCharacterController
 
             _playerState.SetPlayerMovementState(lateralState);
 
-            if (!isGrounded && _characterController.velocity.y > 0f)
-            {
-                _playerState.SetPlayerMovementState(PlayerMovementState.Jumping);
-            }
-            else if (!isGrounded && _characterController.velocity.y <= 0f)
-            {
-                _playerState.SetPlayerMovementState(PlayerMovementState.Falling);
-            }
+            //if (!isGrounded && _characterController.velocity.y > 0f)
+            //{
+            //    _playerState.SetPlayerMovementState(PlayerMovementState.Jumping);
+            //}
+            //else if (!isGrounded && _characterController.velocity.y <= 0f)
+            //{
+            //    _playerState.SetPlayerMovementState(PlayerMovementState.Falling);
+            //}
         }
 
         private void HandleVerticalMovement()
@@ -107,10 +120,10 @@ namespace FinalCharacterController
 
             _verticalVelocity -= gravity * Time.deltaTime;
 
-            if (_playerLocomotionInput.JumpPressed && isGrounded)
-            {
-                _verticalVelocity += Mathf.Sqrt(jumpSpeed * 3 * gravity);
-            }
+            //if (_playerLocomotionInput.JumpPressed && isGrounded)
+            //{
+            //    _verticalVelocity += Mathf.Sqrt(jumpSpeed * 3 * gravity);
+            //}
         }
 
         private void HandleLateralMovement()
@@ -209,5 +222,27 @@ namespace FinalCharacterController
         }
         #endregion
 
+        [ClientRpc]
+        public void ActivateJumpscareClientRpc()
+        {
+            if (!IsOwner) return;
+
+            Debug.Log($"[PlayerController] Jumpscare activado para el cliente LOCAL con ID: {OwnerClientId}");
+
+            SetDead(true);
+            if (_playerCamera != null) _playerCamera.gameObject.SetActive(false);
+
+            if (_playerAudioSource != null && _playerJumpscareSoundClip != null)
+            {
+                _playerAudioSource.PlayOneShot(_playerJumpscareSoundClip);
+            }
+
+            StartCoroutine(DeactivateJumpscareAfterDelay(5f)); 
+        }
+
+        private IEnumerator DeactivateJumpscareAfterDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+        }
     }
 }
