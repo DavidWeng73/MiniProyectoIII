@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 
 namespace FinalCharacterController
 {
@@ -25,15 +26,23 @@ namespace FinalCharacterController
 
         private Vector3 _currentBlendInput = Vector3.zero;
 
+        private NetworkAnimator _networkAnimator;
+
         private void Awake()
         {
             _playerLocomotionInput = GetComponent<PlayerLocomotionInput>();
             _playerState = GetComponent<PlayerState>();
             _playerController = GetComponent<PlayerController>();
+            _networkAnimator = GetComponent<NetworkAnimator>();
         }
 
         private void Update()
         {
+            if (!IsOwner)
+            {
+                return;
+            }
+
             UpdateAnimationState();
         }
 
@@ -52,17 +61,17 @@ namespace FinalCharacterController
 
             _currentBlendInput = Vector3.Lerp(_currentBlendInput, inputTarget, locomotionBlendSpeed * Time.deltaTime);
 
-            _animator.SetBool(isGroundedHash, isGrounded);
-            _animator.SetBool(isIdlingHash, isIdling);
-            _animator.SetBool(isFallingHash, isFalling);
-            _animator.SetBool(isJumpingHash, isJumping);
-            _animator.SetBool(isAimingHash, isAiming);
-            _animator.SetBool(isRotatingToTargetHash, _playerController.IsRotatingToTarget);
+            _networkAnimator.Animator.SetBool(isGroundedHash, isGrounded);
+            _networkAnimator.Animator.SetBool(isIdlingHash, isIdling);
+            _networkAnimator.Animator.SetBool(isFallingHash, isFalling);
+            _networkAnimator.Animator.SetBool(isJumpingHash, isJumping);
+            _networkAnimator.Animator.SetBool(isAimingHash, isAiming);
+            _networkAnimator.Animator.SetBool(isRotatingToTargetHash, _playerController.IsRotatingToTarget);
 
-            _animator.SetFloat(inputXHash, _currentBlendInput.x);
-            _animator.SetFloat(inputYHash, _currentBlendInput.y);
-            _animator.SetFloat(inputMagnitudeHash, _currentBlendInput.magnitude);
-            _animator.SetFloat(rotationMismatchHash, _playerController.RotationMismatch);
+            _networkAnimator.Animator.SetFloat(inputXHash, _currentBlendInput.x);
+            _networkAnimator.Animator.SetFloat(inputYHash, _currentBlendInput.y);
+            _networkAnimator.Animator.SetFloat(inputMagnitudeHash, _currentBlendInput.magnitude);
+            _networkAnimator.Animator.SetFloat(rotationMismatchHash, _playerController.RotationMismatch);
         }
     }
 }
