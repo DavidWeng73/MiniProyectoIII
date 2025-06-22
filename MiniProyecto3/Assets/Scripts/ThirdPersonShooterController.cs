@@ -4,6 +4,7 @@ using static FinalCharacterController.PlayerState;
 using System.Collections;
 using UnityEngine.UI;
 using Unity.Netcode;
+using UnityEngine.Windows;
 
 namespace FinalCharacterController
 {
@@ -37,9 +38,15 @@ namespace FinalCharacterController
         private void Update()
         {
             if (!IsOwner) return;
+
+            if (_playerLocomotionInput.ShootPressed && ammo > 0)
+            {
+                RequestShootServerRpc();
+            }
+
             if (PauseMenu.isPaused) return;
+
             AimCameraRotation();
-            CharacterShoot();
             CharacterUltimate();
         }
 
@@ -83,18 +90,18 @@ namespace FinalCharacterController
             }
         }
 
-        private void CharacterShoot()
-        {
-            if (_playerLocomotionInput.ShootPressed && ammo > 0)
-            {
-                shootProjectile.gameObject.SetActive(true);
-                cameraFlash.gameObject.SetActive(true);
-                audioSource.PlayOneShot(shootClip);
-                StartCoroutine(DisableShootProjectile());
-                ammo--;
-                UpdateBatteryUI();
-            }
-        }
+        //private void CharacterShoot()
+        //{
+        //    Debug.Log($"[CharacterShoot] ShootPressed={_playerLocomotionInput.ShootPressed}, ammo={ammo}");
+        //    if (_playerLocomotionInput.ShootPressed && ammo > 0)
+        //    {
+        //        Debug.Log("[CharacterShoot] Llamando a ShootFlashClientRpc");
+        //        ShootFlashClientRpc();
+        //        audioSource.PlayOneShot(shootClip);
+        //        ammo--;
+        //        UpdateBatteryUI();
+        //    }
+        //}
 
         private void CharacterUltimate()
         {
@@ -124,6 +131,64 @@ namespace FinalCharacterController
             shootUltimate.gameObject.SetActive(false);
             cameraUltFlash.gameObject.SetActive(false);
         }
+
+        //[ClientRpc]
+        //void ShootFlashClientRpc()
+        //{
+        //    Debug.Log($"[ShootFlashClientRpc] recibido en {gameObject.name}, IsOwner={IsOwner}");
+
+        //    if (cameraFlash == null)
+        //    {
+        //        return;
+        //    }
+
+        //    cameraFlash.SetActive(true);
+        //    Debug.Log("[ShootFlashClientRpc] Flash activado.");
+        //    StartCoroutine(DisableShootFlash());
+        //}
+
+        [ServerRpc]
+        private void RequestShootServerRpc(ServerRpcParams rpcParams = default)
+        {
+            ammo--;
+            ShowFlashClientRpc();
+            PlayShootSoundClientRpc();
+            UpdateAmmoClientRpc(ammo);
+        }
+
+        [ClientRpc]
+        private void ShowFlashClientRpc()
+        {
+            if (cameraFlash != null)
+            {
+                cameraFlash.SetActive(true);
+                Invoke(nameof(HideFlash), 0.3f);
+            }
+        }
+
+        [ClientRpc]
+        private void PlayShootSoundClientRpc()
+        {
+            audioSource.PlayOneShot(shootClip);
+        }
+
+        [ClientRpc]
+        private void UpdateAmmoClientRpc(int newAmmo)
+        {
+            ammo = newAmmo;
+            UpdateBatteryUI();
+        }
+
+        private void HideFlash()
+        {
+            cameraFlash.SetActive(false);
+        }
+
+        //private IEnumerator DisableShootFlash()
+        //{
+        //    yield return new WaitForSeconds(0.3f);
+        //    cameraFlash.SetActive(false);
+        //}
 
         private void OnTriggerEnter(Collider other)
         {

@@ -22,19 +22,30 @@ namespace FinalCharacterController
         #endregion
 
         #region Startup
-        private void OnEnable()
+        //private void OnEnable()
+        //{
+        //    Debug.Log("[PlayerLocomotionInput] Habilitando mapa de inputs");
+        //    PlayerControl = new PlayerControl();
+        //    PlayerControl.Enable();
+
+        //    PlayerControl.PlayerLocomotionMap.Enable();
+        //    PlayerControl.PlayerLocomotionMap.SetCallbacks(this);
+        //    Debug.Log("[PlayerLocomotionInput] Callbacks asignados correctamente");
+        //}
+
+        //private void OnDisable()
+        //{
+        //    PlayerControl.PlayerLocomotionMap.Disable();
+        //    PlayerControl.PlayerLocomotionMap.RemoveCallbacks(this);
+        //}
+
+        private void Start()
         {
+            if (!IsOwner) return;
+
             PlayerControl = new PlayerControl();
-            PlayerControl.Enable();
-
-            PlayerControl.PlayerLocomotionMap.Enable();
             PlayerControl.PlayerLocomotionMap.SetCallbacks(this);
-        }
-
-        private void OnDisable()
-        {
-            PlayerControl.PlayerLocomotionMap.Disable();
-            PlayerControl.PlayerLocomotionMap.RemoveCallbacks(this);
+            PlayerControl.PlayerLocomotionMap.Enable();
         }
         #endregion
 
@@ -82,6 +93,7 @@ namespace FinalCharacterController
         {
             if (!context.performed)
                 return;
+            Debug.Log("[OnShoot] Input PERFORMED, disparo registrado");
             ShootPressed = true;
         }
 
