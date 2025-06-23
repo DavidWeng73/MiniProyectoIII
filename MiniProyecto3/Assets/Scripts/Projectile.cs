@@ -1,6 +1,8 @@
+using System;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : NetworkBehaviour
 {
     public int damage = 1;
     private void OnTriggerEnter(Collider other)
@@ -31,6 +33,11 @@ public class Projectile : MonoBehaviour
                 fakepaint.FakePaintTrap();
             }
 
+        }
+
+        if (IsServer)
+        {
+            GetComponent<NetworkObject>().Despawn(true); 
         }
     }
 }

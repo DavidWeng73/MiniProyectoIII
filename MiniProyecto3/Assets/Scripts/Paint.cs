@@ -1,16 +1,13 @@
 using UnityEngine;
 using System.Collections;
+using Unity.Netcode;
 
-public class Paint : MonoBehaviour
+public class Paint : NetworkBehaviour
 {
     public static int numPaints = 0;
     public GameObject puerta;
     public GameObject player;
 
-    private void Start()
-    {
-        if (numPaints >= 3) numPaints = 0;
-    }
     public void DestroyPaint()
     {
         Debug.Log("Cuadro Completado");
@@ -18,10 +15,36 @@ public class Paint : MonoBehaviour
 
         if (numPaints == 3 && puerta != null)
         {
-            puerta.SetActive(false); 
+            puerta.SetActive(false);
+            HideDoorClientRpc();
         }
 
-        Destroy(gameObject);
+        HidePaintClientRpc();
+
+        if (IsServer)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    [ClientRpc]
+    private void HidePaintClientRpc()
+    {
+        if (!IsServer)
+        {
+            Debug.Log($"[Client] Ocultando cuadro con SetActive(false)");
+            gameObject.SetActive(false);
+        }
+    }
+
+    [ClientRpc]
+    private void HideDoorClientRpc()
+    {
+        if (!IsServer && puerta != null)
+        {
+            Debug.Log("[Client] Puerta desactivada con ClientRpc");
+            puerta.SetActive(false);
+        }
     }
 
     public void FakePaintTrap()

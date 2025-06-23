@@ -28,6 +28,9 @@ namespace FinalCharacterController
         [SerializeField] private AudioClip shootClip;
         [SerializeField] private AudioClip ultimateClip;
         private PlayerController playerController;
+
+        //[SerializeField] private GameObject projectilePrefab;
+        [SerializeField] private Transform projectileSpawnPoint;
         private void Awake()
         {
             _playerLocomotionInput = GetComponent<PlayerLocomotionInput>();
@@ -41,6 +44,8 @@ namespace FinalCharacterController
 
             if (_playerLocomotionInput.ShootPressed && ammo > 0)
             {
+                Debug.Log("Intentando llamar ServerRpc desde cliente: " + IsOwner);
+                Debug.Log("[CLIENT] Disparo intentado");
                 RequestShootServerRpc();
             }
 
@@ -147,13 +152,30 @@ namespace FinalCharacterController
         //    StartCoroutine(DisableShootFlash());
         //}
 
-        [ServerRpc]
+        //[ServerRpc]
+        [ServerRpc(RequireOwnership = false)]
         private void RequestShootServerRpc(ServerRpcParams rpcParams = default)
         {
+            Debug.Log("¡ServerRpc ejecutado en el servidor!");
+            Debug.Log("[SERVER] ServerRpc ejecutado");
             ammo--;
             ShowFlashClientRpc();
             PlayShootSoundClientRpc();
             UpdateAmmoClientRpc(ammo);
+
+            Ray ray = new Ray(projectileSpawnPoint.position, transform.forward);
+            if (Physics.Raycast(ray, out RaycastHit hit, 10f))
+            {
+                Debug.Log($"[SERVER] Raycast hit: {hit.collider.name}, tag: {hit.collider.tag}");
+                if (hit.collider.CompareTag("Paints"))
+                {
+                    hit.collider.GetComponent<Paint>().DestroyPaint();
+                }
+                else if (hit.collider.CompareTag("FakePaints"))
+                {
+                    hit.collider.GetComponent<Paint>().FakePaintTrap();
+                }
+            }
         }
 
         [ClientRpc]
