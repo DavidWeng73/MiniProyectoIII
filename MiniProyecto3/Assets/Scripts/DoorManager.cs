@@ -1,14 +1,14 @@
 using UnityEngine;
+using Unity.Netcode;
 using UnityEngine.SceneManagement;
 
-public class DoorManager : MonoBehaviour
+public class DoorManager : NetworkBehaviour
 {
     public string nextLevel;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
-        {
-            SceneManager.LoadScene(nextLevel);
-        }
+        if (!IsServer || !other.CompareTag("Player")) return;
+        NetworkManager.Singleton.SceneManager.LoadScene(nextLevel, LoadSceneMode.Single);
     }
 }

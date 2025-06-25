@@ -486,7 +486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1617216453
+  GlobalObjectIdHash: 2624059677
   InScenePlacedSourceGlobalObjectIdHash: 2624059677
   DeferredDespawnTick: 0
   Ownership: 1
@@ -625,7 +625,6 @@ MonoBehaviour:
   audioSource: {fileID: 7722745294868278636}
   shootClip: {fileID: 8300000, guid: 63c1d74cb078d3e4aa8538f95175b5f5, type: 3}
   ultimateClip: {fileID: 8300000, guid: 9ebecdaa287c3a646a2e466d2cf094a0, type: 3}
-  projectilePrefab: {fileID: 1665192734195600316, guid: d0c10dd887073734b8391d0c0163404f, type: 3}
   projectileSpawnPoint: {fileID: 5690984306327316583}
 --- !u!136 &6803378969419576781
 CapsuleCollider:
@@ -1169,7 +1168,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 5883013487171608908}
   m_Follow: {fileID: 5883013487171608908}
   m_Lens:
-    FieldOfView: 77.48
+    FieldOfView: 63.3
     OrthographicSize: 5
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -2673,7 +2672,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 77.48
+  field of view: 63.3
   orthographic: 0
   orthographic size: 5
   m_Depth: 0

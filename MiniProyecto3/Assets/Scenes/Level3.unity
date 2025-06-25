@@ -1538,6 +1538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!65 &135359810
@@ -3176,6 +3177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a124fc68c2611474da7152cc1f4e2c9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   nextLevel: FinalScene
 --- !u!1001 &299370056
 PrefabInstance:
@@ -3925,6 +3927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!65 &325077276
@@ -4218,6 +4221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!65 &339041826
@@ -7140,6 +7144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!4 &524059934 stripped
@@ -9467,6 +9472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!1 &663235857
@@ -9761,6 +9767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!4 &676949310 stripped
@@ -12214,6 +12221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!65 &894325785
@@ -17888,6 +17896,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!65 &1369025496
@@ -18658,6 +18667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!65 &1400559105
@@ -18904,6 +18914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!65 &1414089121
@@ -20666,6 +20677,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75996499f6b857b4799da3fb626d37b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   ai: {fileID: 1577363342}
   destinations:
   - {fileID: 1222421760}
@@ -20695,10 +20707,13 @@ MonoBehaviour:
   jumpscareTime: 2
   walking: 0
   chasing: 0
-  player: {fileID: 0}
   destinationAmount: 6
   rayCastOffset: {x: 0, y: 0, z: 0}
   deathScene: Level1
+  isChasing:
+    m_InternalValue: 0
+  networkedDestination:
+    m_InternalValue: {x: 0, y: 0, z: 0}
   audioSource: {fileID: 1577363345}
   jumpscareClip: {fileID: 8300000, guid: 7cee561f271b48748b2f13a4cf411e62, type: 3}
 --- !u!136 &1577363341
@@ -20880,6 +20895,31 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1577363346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577363335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 4204066009
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!4 &1578801464 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 348317726534936664, guid: 29b641f3274cf4748a665a543dc07dfc, type: 3}
@@ -21527,6 +21567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!65 &1613557723
@@ -23043,6 +23084,9 @@ PrefabInstance:
       addedObject: {fileID: 1577363341}
     - targetCorrespondingSourceObject: {fileID: 19588385245968726, guid: 8ee08d04ad5df46fbb2e97260b63420b, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1577363346}
+    - targetCorrespondingSourceObject: {fileID: 19588385245968726, guid: 8ee08d04ad5df46fbb2e97260b63420b, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1577363340}
     - targetCorrespondingSourceObject: {fileID: 19588385245968726, guid: 8ee08d04ad5df46fbb2e97260b63420b, type: 3}
       insertIndex: -1
@@ -23642,6 +23686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!65 &1753723651
@@ -24844,6 +24889,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca36eedee1e89d44ba0e9804959d12d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   puerta: {fileID: 176304386}
   player: {fileID: 0}
 --- !u!65 &1868745307

@@ -157,7 +157,11 @@ public class EnemyAI : NetworkBehaviour
         if (respawn != null)
         {
             respawn.RespawnServerRpc(clientId);
-            respawn.OnRespawnClientRpc(clientId); 
+            Transform spawnPoint = RespawnManager.Instance.GetSpawnPoint(SceneManager.GetActiveScene().name);
+            if (spawnPoint != null)
+            {
+                respawn.OnRespawnClientRpc(spawnPoint.position);
+            }
         }
 
         StartCoroutine(TemporarilyIgnorePlayer(player.gameObject));
