@@ -118,6 +118,7 @@ namespace FinalCharacterController
                 audioSource.PlayOneShot(ultimateClip);
                 StartCoroutine(DisableUltimate());
                 ammo = 0;
+                RequestUltimateFreezeServerRpc(transform.position + transform.forward * 5f);
                 UpdateBatteryUI();
             }
         }
@@ -167,6 +168,7 @@ namespace FinalCharacterController
             if (Physics.Raycast(ray, out RaycastHit hit, 10f))
             {
                 Debug.Log($"[SERVER] Raycast hit: {hit.collider.name}, tag: {hit.collider.tag}");
+
                 if (hit.collider.CompareTag("Paints"))
                 {
                     hit.collider.GetComponent<Paint>().DestroyPaint();
@@ -174,6 +176,31 @@ namespace FinalCharacterController
                 else if (hit.collider.CompareTag("FakePaints"))
                 {
                     hit.collider.GetComponent<Paint>().FakePaintTrap();
+                }
+                else if (hit.collider.CompareTag("Enemy"))
+                {
+                    var enemy = hit.collider.GetComponent<EnemyAI>();
+                    if (enemy != null)
+                    {
+                        enemy.FreezeServerRpc(3f); // Añadido: congelar enemigo por 3 segundos
+                    }
+                }
+            }
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void RequestUltimateFreezeServerRpc(Vector3 center)
+        {
+            Collider[] hits = Physics.OverlapSphere(center, 7f);
+            foreach (var hit in hits)
+            {
+                if (hit.CompareTag("Enemy"))
+                {
+                    var enemy = hit.GetComponent<EnemyAI>();
+                    if (enemy != null)
+                    {
+                        enemy.FreezeServerRpc(6f); // Congelar enemigo por 6 segundos
+                    }
                 }
             }
         }

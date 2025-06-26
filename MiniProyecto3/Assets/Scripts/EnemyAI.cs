@@ -239,4 +239,41 @@ public class EnemyAI : NetworkBehaviour
             playerController.SetDead(true) ;
         }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void FreezeServerRpc(float duration)
+    {
+        if (isFrozen) return;
+
+        StartCoroutine(FreezeRoutine(duration));
+    }
+
+    private bool isFrozen = false;
+
+    private IEnumerator FreezeRoutine(float duration)
+    {
+        isFrozen = true;
+        float originalSpeed = ai.speed;
+
+        ai.speed = 0;
+        ai.isStopped = true;
+        aiAnim.SetTrigger("idle");
+
+        yield return new WaitForSeconds(duration);
+
+        ai.isStopped = false;
+        isFrozen = false;
+
+        // Volver al estado previo
+        if (chasing)
+        {
+            ai.speed = chaseSpeed;
+            aiAnim.SetTrigger("sprint");
+        }
+        else
+        {
+            ai.speed = walkSpeed;
+            aiAnim.SetTrigger("walk");
+        }
+    }
 }
