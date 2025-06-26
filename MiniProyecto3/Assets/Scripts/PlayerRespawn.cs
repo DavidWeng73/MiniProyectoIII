@@ -5,13 +5,31 @@ using UnityEngine.SceneManagement;
 
 public class PlayerRespawn : NetworkBehaviour
 {
+    private bool hasTeleported = false;
+
     public override void OnNetworkSpawn()
     {
+        if (IsServer)
+        {
+            NetworkManager.SceneManager.OnLoadComplete += OnSceneLoadedServer;
+        }
         if (IsOwner)
         {
-            NetworkManager.SceneManager.OnLoadComplete += OnSceneLoaded;
-            TeleportToSpawn(SceneManager.GetActiveScene().name);
+            NetworkManager.SceneManager.OnLoadComplete += OnSceneLoadedClient;
         }
+    }
+
+    private void OnSceneLoadedServer(ulong clientId, string sceneName, LoadSceneMode mode)
+    {
+        Transform spawn = RespawnManager.Instance.GetSpawnPoint(sceneName);
+        var player = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
+        player.transform.position = spawn.position;
+    }
+
+    private void OnSceneLoadedClient(ulong clientId, string sceneName, LoadSceneMode mode)
+    {
+        if (clientId != NetworkManager.LocalClientId) return;
+        TeleportToSpawn(sceneName);
     }
 
     public override void OnDestroy()
@@ -24,8 +42,9 @@ public class PlayerRespawn : NetworkBehaviour
 
     private void OnSceneLoaded(ulong clientId, string sceneName, LoadSceneMode mode)
     {
-        if (clientId != NetworkManager.LocalClientId) return;
+        if (hasTeleported) return;
         TeleportToSpawn(sceneName);
+        hasTeleported = true;
     }
 
     private void TeleportToSpawn(string sceneName)
@@ -73,21 +92,25 @@ public class PlayerRespawn : NetworkBehaviour
     [ClientRpc]
     public void OnRespawnClientRpc(Vector3 newPosition, ClientRpcParams clientRpcParams = default)
     {
+        if (!IsOwner) return;  // Solo el propietario actualiza su posición y cámara
+
         var controller = GetComponent<PlayerController>();
-        if (controller != null)
-        {
-            controller.SetDead(false);
-            controller.enabled = true;
-            CharacterController cc = GetComponent<CharacterController>();
-            if (cc != null) cc.enabled = false;
+        controller.SetDead(false);
+        controller.enabled = true;
 
-            transform.position = newPosition;
+        var cc = GetComponent<CharacterController>();
+        if (cc != null) { cc.enabled = false; transform.position = newPosition; cc.enabled = true; }
 
-            if (cc != null) cc.enabled = true;
+        var cam = controller.GetCameraTransform()?.gameObject;
+        if (cam != null) cam.SetActive(true);
+    }
 
-            var camera = controller.GetCameraTransform()?.gameObject;
-            if (camera != null) camera.SetActive(true);
-        }
+    private void TeleportTo(Vector3 pos)
+    {
+        var cc = GetComponent<CharacterController>();
+        if (cc) cc.enabled = false;
+        transform.position = pos;
+        if (cc) cc.enabled = true;
     }
 
     public void ManualRespawn()

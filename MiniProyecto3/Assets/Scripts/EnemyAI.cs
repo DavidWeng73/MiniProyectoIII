@@ -232,11 +232,17 @@ public class EnemyAI : NetworkBehaviour
     {
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
-            var playerController = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
-            var camera = playerController.GetCameraTransform()?.gameObject;
-
-            if (camera != null) camera.SetActive(false);
-            playerController.SetDead(true) ;
+            var pc = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
+            pc.SetDead(true);
+            var cam = pc.GetCameraTransform()?.gameObject;
+            if (cam != null) cam.SetActive(false);
+        }
+        else if (NetworkManager.Singleton.IsHost)
+        {
+            var hostPc = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
+            hostPc.SetDead(false); // asegurar que no está muerto
+            var hostCam = hostPc.GetCameraTransform()?.gameObject;
+            if (hostCam != null) hostCam.SetActive(true);
         }
     }
 
