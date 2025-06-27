@@ -5,6 +5,12 @@ using UnityEngine;
 public class Projectile : NetworkBehaviour
 {
     public int damage = 1;
+    private ulong shooterClientId;
+
+    public void Initialize(ulong clientId)
+    {
+        shooterClientId = clientId;
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
@@ -30,7 +36,7 @@ public class Projectile : NetworkBehaviour
             Paint fakepaint = other.GetComponent<Paint>();
             if (fakepaint != null)
             {
-                fakepaint.FakePaintTrap();
+                fakepaint.FakePaintTrap(shooterClientId);
             }
 
         }

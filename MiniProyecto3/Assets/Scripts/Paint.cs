@@ -6,55 +6,48 @@ public class Paint : NetworkBehaviour
 {
     public static int numPaints = 0;
     public GameObject puerta;
-    public GameObject player;
+
+    void Start()
+    {
+        if (IsServer)
+            numPaints = 0;
+    }
 
     public void DestroyPaint()
     {
-        Debug.Log("Cuadro Completado");
         numPaints++;
-
         if (numPaints == 3 && puerta != null)
-        {
-            puerta.SetActive(false);
             HideDoorClientRpc();
-        }
 
         HidePaintClientRpc();
-
         if (IsServer)
-        {
             gameObject.SetActive(false);
-        }
     }
 
     [ClientRpc]
-    private void HidePaintClientRpc()
+    private void HidePaintClientRpc() => gameObject.SetActive(false);
+
+    [ClientRpc]
+    private void HideDoorClientRpc() => puerta.SetActive(false);
+
+    // Nuevo: invoca la congelación en el cliente que disparó
+    public void FakePaintTrap(ulong shooterClientId)
     {
-        if (!IsServer)
+        FreezePlayerClientRpc(new ClientRpcParams
         {
-            Debug.Log($"[Client] Ocultando cuadro con SetActive(false)");
-            gameObject.SetActive(false);
-        }
+            Send = new ClientRpcSendParams { TargetClientIds = new[] { shooterClientId } }
+        });
     }
 
     [ClientRpc]
-    private void HideDoorClientRpc()
+    private void FreezePlayerClientRpc(ClientRpcParams clientRpcParams = default)
     {
-        if (!IsServer && puerta != null)
-        {
-            Debug.Log("[Client] Puerta desactivada con ClientRpc");
-            puerta.SetActive(false);
-        }
+        StartCoroutine(FreezeCoroutine());
     }
 
-    public void FakePaintTrap()
+    private IEnumerator FreezeCoroutine()
     {
-        StartCoroutine(FakePaintTrapCoroutine());
-    }
-
-    private IEnumerator FakePaintTrapCoroutine()
-    {
-        CharacterController controller = player.GetComponent<CharacterController>();
+        var controller = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<CharacterController>();
         if (controller != null)
         {
             controller.enabled = false;

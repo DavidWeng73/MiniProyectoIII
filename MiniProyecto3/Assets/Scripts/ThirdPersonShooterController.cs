@@ -175,7 +175,11 @@ namespace FinalCharacterController
                 }
                 else if (hit.collider.CompareTag("FakePaints"))
                 {
-                    hit.collider.GetComponent<Paint>().FakePaintTrap();
+                    var paint = hit.collider.GetComponent<Paint>();
+                    if (paint != null)
+                    {
+                        paint.FakePaintTrap(rpcParams.Receive.SenderClientId);
+                    }
                 }
                 else if (hit.collider.CompareTag("Enemy"))
                 {
