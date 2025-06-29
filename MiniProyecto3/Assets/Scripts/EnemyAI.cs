@@ -22,6 +22,7 @@ public class EnemyAI : NetworkBehaviour
     public string deathScene;
     public NetworkVariable<bool> isChasing = new NetworkVariable<bool>();
     public NetworkVariable<Vector3> networkedDestination = new NetworkVariable<Vector3>();
+    private bool hasLostLife = false;
 
     void Start()
     {
@@ -90,7 +91,10 @@ public class EnemyAI : NetworkBehaviour
                     }
 
                     DisablePlayerClientRpc(clientId);
-                    StartCoroutine(JumpscareAndRespawn(targetPlayer, clientId));
+                    if (!hasLostLife)
+                    {
+                        StartCoroutine(JumpscareAndRespawn(targetPlayer, clientId));
+                    }
                 }
 
                 chasing = false;
@@ -151,6 +155,9 @@ public class EnemyAI : NetworkBehaviour
 
     IEnumerator JumpscareAndRespawn(Transform player, ulong clientId)
     {
+        if (hasLostLife) yield break;
+        hasLostLife = true;
+
         yield return new WaitForSeconds(jumpscareTime);
 
         var respawn = player.GetComponent<PlayerRespawn>();
@@ -176,6 +183,8 @@ public class EnemyAI : NetworkBehaviour
         chasing = false;
         randNum = Random.Range(0, destinations.Count);
         currentDest = destinations[randNum];
+
+        hasLostLife = false;
     }
 
     private HashSet<GameObject> temporarilyIgnored = new HashSet<GameObject>();

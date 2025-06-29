@@ -70,6 +70,12 @@ public class PlayerRespawn : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void RespawnServerRpc(ulong clientId)
     {
+        if (IsServer && LifeManager.Instance != null)
+        {
+            LifeManager.Instance.PlayerLostLife();
+            Debug.Log("Vida restada");
+        }
+
         string currentScene = SceneManager.GetActiveScene().name;
         Transform spawnPoint = RespawnManager.Instance.GetSpawnPoint(currentScene);
 
