@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Netcode;
+using UnityEngine.SceneManagement;
 
 public class LifeManager : NetworkBehaviour
 {
@@ -39,6 +40,7 @@ public class LifeManager : NetworkBehaviour
         if (newVal <= 0)
         {
             Debug.Log("[SharedLifeManager] ¡Juego perdido!");
+            NetworkManager.SceneManager.LoadScene("LoseScene", LoadSceneMode.Single);
         }
     }
 }

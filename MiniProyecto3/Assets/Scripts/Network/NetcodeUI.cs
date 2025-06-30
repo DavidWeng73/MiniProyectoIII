@@ -9,7 +9,7 @@ public class NetcodeUI : MonoBehaviour
 {
     [SerializeField] private Button startHostButton;
     [SerializeField] private Button startClientButton;
-    [SerializeField] private string gameSceneName = "Level1";
+    [SerializeField] private string gameSceneName = "LobbyScene";
 
     private void Awake()
     {

@@ -11,6 +11,7 @@ public class PauseMenu : MonoBehaviour
 
     void Start()
     {
+        Cursor.visible = true;
         lockC = GetComponent<CursorLock>();
     }
 
@@ -50,7 +51,7 @@ public class PauseMenu : MonoBehaviour
     public void RestartGame()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Level1");
+        SceneManager.LoadScene("LobbyLevel");
         lockC.LockCursor();
     }
 

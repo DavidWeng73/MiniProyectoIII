@@ -488,7 +488,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 29.35
+  m_fontSize: 29.6
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2186,7 +2186,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.4
+  m_fontSize: 39.6
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4753,7 +4753,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startHostButton: {fileID: 2070654861}
   startClientButton: {fileID: 383136194}
-  gameSceneName: Level1
+  gameSceneName: LobbyScene
 --- !u!1 &1352753870
 GameObject:
   m_ObjectHideFlags: 0
@@ -5086,7 +5086,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 33.35
+  m_fontSize: 33.6
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -6442,7 +6442,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startHostButton: {fileID: 266255034}
   startClientButton: {fileID: 0}
-  gameSceneName: Level1
+  gameSceneName: LobbyScene
 --- !u!1 &1703092663
 GameObject:
   m_ObjectHideFlags: 0

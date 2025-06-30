@@ -11,9 +11,14 @@ public class MenuManager : MonoBehaviour
     private TextMeshProUGUI Btn_Settings;
     private TextMeshProUGUI Btn_Exit;
 
+    private void Start()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
     public void StartGame()
     {
-        SceneManager.LoadScene("Level1");
+        SceneManager.LoadScene("LobbyLevel");
     }
     public void ExitGame()
     {
