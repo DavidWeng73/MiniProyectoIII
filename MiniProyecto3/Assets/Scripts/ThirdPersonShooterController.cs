@@ -82,19 +82,33 @@ namespace FinalCharacterController
             }
         }
 
+        private float aimLayerWeight = 0f;
+        private const float weightSpeed = 10f;
+
         private void AimCameraRotation()
         {
-            if (_playerLocomotionInput.AimPressed)
+            float targetWeight = _playerLocomotionInput.AimPressed ? 1f : 0f;
+            aimLayerWeight = Mathf.MoveTowards(aimLayerWeight, targetWeight, Time.deltaTime * weightSpeed);
+
+            if (Mathf.Abs(animator.GetLayerWeight(1) - aimLayerWeight) > 0.01f)
             {
-                aimVirtualCamera.gameObject.SetActive(true);
-                animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
+                animator.SetLayerWeight(1, aimLayerWeight);
             }
-            else
-            {
-                aimVirtualCamera.gameObject.SetActive(false);
-                animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
-            }
+
+            aimVirtualCamera.gameObject.SetActive(_playerLocomotionInput.AimPressed);
         }
+        //{
+        //    if (_playerLocomotionInput.AimPressed)
+        //    {
+        //        aimVirtualCamera.gameObject.SetActive(true);
+        //        animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 1f, Time.deltaTime * 10f));
+        //    }
+        //    else
+        //    {
+        //        aimVirtualCamera.gameObject.SetActive(false);
+        //        animator.SetLayerWeight(1, Mathf.Lerp(animator.GetLayerWeight(1), 0f, Time.deltaTime * 10f));
+        //    }
+        //}
 
         //private void CharacterShoot()
         //{

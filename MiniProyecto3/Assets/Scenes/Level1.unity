@@ -6756,11 +6756,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeIcons:
-  - {fileID: 1297632270}
-  - {fileID: 1516032044}
-  - {fileID: 1894396792}
-  - {fileID: 198098679}
   - {fileID: 1144989195}
+  - {fileID: 198098679}
+  - {fileID: 1894396792}
+  - {fileID: 1516032044}
+  - {fileID: 1297632270}
 --- !u!4 &879110078 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2638641864731051663, guid: 5ffaa43e5fc714343940d5e26450d885, type: 3}
