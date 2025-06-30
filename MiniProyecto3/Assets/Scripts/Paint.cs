@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using Unity.Netcode;
+using FinalCharacterController;
 
 public class Paint : NetworkBehaviour
 {
@@ -42,7 +43,11 @@ public class Paint : NetworkBehaviour
     [ClientRpc]
     private void FreezePlayerClientRpc(ClientRpcParams clientRpcParams = default)
     {
-        StartCoroutine(FreezeCoroutine());
+        var shooter = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<ThirdPersonShooterController>();
+        if (shooter != null)
+        {
+            shooter.TriggerFreezeFeedback(3f); // Duración de 3 segundos
+        }
     }
 
     private IEnumerator FreezeCoroutine()

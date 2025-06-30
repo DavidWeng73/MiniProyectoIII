@@ -23,6 +23,7 @@ public class EnemyAI : NetworkBehaviour
     public NetworkVariable<bool> isChasing = new NetworkVariable<bool>();
     public NetworkVariable<Vector3> networkedDestination = new NetworkVariable<Vector3>();
     private bool hasLostLife = false;
+    [SerializeField] private GameObject freezeEffect;
 
     void Start()
     {
@@ -265,6 +266,15 @@ public class EnemyAI : NetworkBehaviour
 
     private bool isFrozen = false;
 
+    [ClientRpc]
+    private void SetFreezeEffectClientRpc(bool isActive)
+    {
+        if (freezeEffect != null)
+        {
+            freezeEffect.SetActive(isActive);
+        }
+    }
+
     private IEnumerator FreezeRoutine(float duration)
     {
         isFrozen = true;
@@ -274,7 +284,11 @@ public class EnemyAI : NetworkBehaviour
         ai.isStopped = true;
         aiAnim.SetTrigger("idle");
 
+        SetFreezeEffectClientRpc(true);
+
         yield return new WaitForSeconds(duration);
+
+        SetFreezeEffectClientRpc(false);
 
         ai.isStopped = false;
         isFrozen = false;

@@ -28,6 +28,7 @@ namespace FinalCharacterController
         [SerializeField] private AudioClip shootClip;
         [SerializeField] private AudioClip ultimateClip;
         private PlayerController playerController;
+        [SerializeField] private GameObject playerfreezeEffect;
 
         //[SerializeField] private GameObject projectilePrefab;
         [SerializeField] private Transform projectileSpawnPoint;
@@ -264,6 +265,28 @@ namespace FinalCharacterController
                     Bigbattery.gameObject.SetActive(false);
                 }
             }
+        }
+
+        public void TriggerFreezeFeedback(float duration)
+        {
+            StartCoroutine(FreezeFeedbackRoutine(duration));
+        }
+
+        private IEnumerator FreezeFeedbackRoutine(float duration)
+        {
+            // Bloquear movimiento
+            var controller = GetComponent<CharacterController>();
+            if (controller != null) controller.enabled = false;
+
+            // Activar efecto
+            if (playerfreezeEffect != null) playerfreezeEffect.SetActive(true);
+
+            yield return new WaitForSeconds(duration);
+
+            // Desactivar efecto
+            if (playerfreezeEffect != null) playerfreezeEffect.SetActive(false);
+
+            if (controller != null) controller.enabled = true;
         }
 
     }
