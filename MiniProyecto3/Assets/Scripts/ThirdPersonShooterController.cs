@@ -169,6 +169,7 @@ namespace FinalCharacterController
         //}
 
         //[ServerRpc]
+
         [ServerRpc(RequireOwnership = false)]
         private void RequestShootServerRpc(ServerRpcParams rpcParams = default)
         {
@@ -218,7 +219,7 @@ namespace FinalCharacterController
                     var enemy = hit.GetComponent<EnemyAI>();
                     if (enemy != null)
                     {
-                        enemy.FreezeServerRpc(6f); // Congelar enemigo por 6 segundos
+                        enemy.FreezeServerRpc(6f); 
                     }
                 }
             }

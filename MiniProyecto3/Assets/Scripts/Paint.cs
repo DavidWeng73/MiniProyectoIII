@@ -31,7 +31,7 @@ public class Paint : NetworkBehaviour
     [ClientRpc]
     private void HideDoorClientRpc() => puerta.SetActive(false);
 
-    // Nuevo: invoca la congelación en el cliente que disparó
+    
     public void FakePaintTrap(ulong shooterClientId)
     {
         FreezePlayerClientRpc(new ClientRpcParams
@@ -46,7 +46,7 @@ public class Paint : NetworkBehaviour
         var shooter = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<ThirdPersonShooterController>();
         if (shooter != null)
         {
-            shooter.TriggerFreezeFeedback(3f); // Duración de 3 segundos
+            shooter.TriggerFreezeFeedback(3f); 
         }
     }
 
