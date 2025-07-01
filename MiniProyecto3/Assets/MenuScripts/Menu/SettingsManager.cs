@@ -14,17 +14,26 @@ public class SettingsManager : MonoBehaviour
         resolutions = Screen.resolutions;
 
         resolutionsDropdown.ClearOptions();
-
         List<string> options = new List<string>();
+        List<Resolution> uniqueResolutions = new List<Resolution>();
 
         int currentResolutionIndex = 0;
 
+        foreach (var res in resolutions)
+        {
+            if (!uniqueResolutions.Exists(r => r.width == res.width && r.height == res.height))
+            {
+                uniqueResolutions.Add(res);
+                options.Add(res.width + " x " + res.height);
+            }
+        }
+
+        resolutions = uniqueResolutions.ToArray();
+
         for (int i = 0; i < resolutions.Length; i++)
         {
-            string option = resolutions[i].width + " x " + resolutions[i].height;
-            options.Add(option);
-
-            if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+            if (resolutions[i].width == Screen.currentResolution.width &&
+                resolutions[i].height == Screen.currentResolution.height)
             {
                 currentResolutionIndex = i;
             }

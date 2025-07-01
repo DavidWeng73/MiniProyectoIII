@@ -201,7 +201,7 @@ namespace FinalCharacterController
                     var enemy = hit.collider.GetComponent<EnemyAI>();
                     if (enemy != null)
                     {
-                        enemy.FreezeServerRpc(3f); // Añadido: congelar enemigo por 3 segundos
+                        enemy.FreezeServerRpc(3f); 
                     }
                 }
             }

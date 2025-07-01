@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject settingsMenu;
     private CursorLock lockC;
     public static bool isPaused;
+    [SerializeField] private string gameSceneName = "LobbyScene";
 
     void Start()
     {
@@ -33,6 +35,18 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
+    public void TogglePauseMenu()
+    {
+        if (isPaused)
+        {
+            ResumeGame();
+        }
+        else
+        {
+            PauseGame();
+        }
+    }
+
     public void PauseGame()
     {
         Time.timeScale = 0f;
@@ -46,6 +60,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         isPaused = false;
         lockC.LockCursor();
+        settingsMenu.SetActive(false);
     }
 
     public void RestartGame()
@@ -61,5 +76,15 @@ public class PauseMenu : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
         isPaused = false;
         lockC.UnlockCursor();
+    }
+
+    public void BackToLobby()
+    {
+        NetworkManager.Singleton.SceneManager.LoadScene(gameSceneName, LoadSceneMode.Single);
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 }
