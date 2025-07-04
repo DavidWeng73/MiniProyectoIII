@@ -5,6 +5,7 @@ using System.Collections;
 using UnityEngine.UI;
 using Unity.Netcode;
 using UnityEngine.Windows;
+using UnityEngine.SceneManagement;
 
 namespace FinalCharacterController
 {
@@ -41,20 +42,23 @@ namespace FinalCharacterController
         }
         private void Update()
         {
-            if (!IsOwner) return;
+            if (!IsOwner || PauseMenu.isPaused) return;
 
-            if (_playerLocomotionInput.ShootPressed && ammo > 0)
+            string currentScene = SceneManager.GetActiveScene().name;
+
+            if (currentScene == "CoopLevel1")
             {
-                Debug.Log("Intentando llamar ServerRpc desde cliente: " + IsOwner);
-                Debug.Log("[CLIENT] Disparo intentado");
-                RequestShootServerRpc();
+                if (CoopRoleAssigner.LocalRole == CoopRoleAssigner.CoopRole.Shooter && _playerLocomotionInput.ShootPressed && ammo > 0)
+                {
+                    RequestShootServerRpc();
+                }
             }
-
-            if (PauseMenu.isPaused) return;
-
-            if (CoopRoleAssigner.LocalRole == CoopRoleAssigner.CoopRole.Shooter && _playerLocomotionInput.ShootPressed && ammo > 0)
+            else 
             {
-                RequestShootServerRpc();
+                if (_playerLocomotionInput.ShootPressed && ammo > 0)
+                {
+                    RequestShootServerRpc();
+                }
             }
 
             AimCameraRotation();

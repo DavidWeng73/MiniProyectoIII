@@ -4485,7 +4485,6 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   nextLevel: Level3
   coopScene: Level3
-  usarNivelCooperativo: 0
 --- !u!114 &287115425
 MonoBehaviour:
   m_ObjectHideFlags: 0
