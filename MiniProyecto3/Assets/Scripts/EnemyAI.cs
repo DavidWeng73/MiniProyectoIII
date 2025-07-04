@@ -250,7 +250,7 @@ public class EnemyAI : NetworkBehaviour
         else if (NetworkManager.Singleton.IsHost)
         {
             var hostPc = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerController>();
-            hostPc.SetDead(false); // asegurar que no está muerto
+            hostPc.SetDead(false); 
             var hostCam = hostPc.GetCameraTransform()?.gameObject;
             if (hostCam != null) hostCam.SetActive(true);
         }
@@ -293,7 +293,6 @@ public class EnemyAI : NetworkBehaviour
         ai.isStopped = false;
         isFrozen = false;
 
-        // Volver al estado previo
         if (chasing)
         {
             ai.speed = chaseSpeed;

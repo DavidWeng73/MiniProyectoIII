@@ -98,7 +98,7 @@ public class PlayerRespawn : NetworkBehaviour
     [ClientRpc]
     public void OnRespawnClientRpc(Vector3 newPosition, ClientRpcParams clientRpcParams = default)
     {
-        if (!IsOwner) return;  // Solo el propietario actualiza su posición y cámara
+        if (!IsOwner) return;  
 
         var controller = GetComponent<PlayerController>();
         controller.SetDead(false);

@@ -52,6 +52,11 @@ namespace FinalCharacterController
 
             if (PauseMenu.isPaused) return;
 
+            if (CoopRoleAssigner.LocalRole == CoopRoleAssigner.CoopRole.Shooter && _playerLocomotionInput.ShootPressed && ammo > 0)
+            {
+                RequestShootServerRpc();
+            }
+
             AimCameraRotation();
             CharacterUltimate();
         }

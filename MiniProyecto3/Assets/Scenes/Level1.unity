@@ -2316,6 +2316,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   nextLevel: Level2
+  coopScene: Level2
 --- !u!114 &287115425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11722,8 +11723,8 @@ MonoBehaviour:
   minIdleTime: 2
   maxIdleTime: 5
   idleTime: 0
-  sightDistance: 8
-  catchDistance: 3
+  sightDistance: 5
+  catchDistance: 2
   chaseTime: 0
   minChaseTime: 2
   maxChaseTime: 8
